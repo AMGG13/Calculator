@@ -1,2 +1,0 @@
-# Calculator
-simple web calculator
