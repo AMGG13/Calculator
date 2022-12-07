@@ -1,6 +1,3 @@
-:root{
-    --background-calc: rgb(255, 255, 255);
-}
 *{
     margin: 0px;
 }
@@ -27,14 +24,13 @@ body{
     top:30%;
     left: 30%;
     width: 400px;
-    height: 450px;
+    height: 510px;
     margin: 0 auto;
     text-align: center;
     border-color: black;
     border-style: solid;
     border-radius: 15px;
     border-width: 5px;
-    box-shadow: 10px 10px 0px rgb(255, 255, 255);
     background-color: var(--background-calc)
 }
 .buttons-body{
@@ -50,7 +46,7 @@ button{
     border-style: solid;
     border-radius: 15px;
     border-width: 2px;
-    box-shadow: 2px 4px 0px rgb(0, 0, 0);
+    box-shadow: 0px 4px 0px rgb(0, 0, 0);
     transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
 }
 button:hover{
@@ -60,43 +56,113 @@ button:active{
     background-color: rgb(230, 230, 230);
     position: relative;
     top: 4px;
-    left: 2px;
+    font-weight: bold;
     border-width: 1px;
     box-shadow: 0px 0px 0px rgb(0, 0, 0);
 }
-#equal-button:active{
+#equal-button{
+    width: 70px;
+    height: 50px;
+    margin: 5px;
+    margin-bottom: 10px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 15px;
+    border-width: 2px;
+    box-shadow: 0px 4px 0px rgb(100, 140, 185);
+    transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
     background-color: rgb(137, 192, 255);
+}
+#equal-button:active{
     position: relative;
     top: 4px;
-    left: 2px;
     box-shadow: 0px 0px 0px rgb(0, 0, 0);
 }
-#product-button:active{
-    background-color: rgb(180, 123, 249);
+#slash-button{
+    width: 70px;
+    height: 50px;
+    margin: 5px;
+    margin-bottom: 10px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 15px;
+    border-width: 2px;
+    box-shadow: 0px 4px 0px rgb(190, 183, 87);
+    transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
+    background-color: rgb(246, 237, 112);
+}
+#slash-button:active{
     position: relative;
     top: 4px;
-    left: 2px;
     box-shadow: 0px 0px 0px rgb(0, 0, 0);
+}
+#product-button{
+    width: 70px;
+    height: 50px;
+    margin: 5px;
+    margin-bottom: 10px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 15px;
+    border-width: 2px;
+    box-shadow: 0px 4px 0px rgb(120, 80, 169);
+    transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
+    background-color: rgb(180, 123, 249);
+}
+#product-button:active{
+    position: relative;
+    top: 4px;
+    box-shadow: 0px 0px 0px rgb(0, 0, 0);
+}
+#minus-button{
+    width: 70px;
+    height: 50px;
+    margin: 5px;
+    margin-bottom: 10px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 15px;
+    border-width: 2px;
+    box-shadow: 0px 4px 0px rgb(183, 80, 80);
+    transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
+    background-color: rgb(255, 110, 110);
 }
 #minus-button:active{
     background-color: rgb(255, 110, 110);
     position: relative;
     top: 4px;
-    left: 2px;
     box-shadow: 0px 0px 0px rgb(0, 0, 0);
 }
-#plus-button:active{
+#plus-button{
+    width: 70px;
+    height: 50px;
+    margin: 5px;
+    margin-bottom: 10px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 15px;
+    border-width: 2px;
+    box-shadow: 0px 4px 0px rgb(83, 157, 78);
+    transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
     background-color: rgb(155, 242, 148);
+}
+#plus-button:active{
     position: relative;
     top: 4px;
-    left: 2px;
     box-shadow: 0px 0px 0px rgb(0, 0, 0);
 }
 #clear-button:active{
-    background-color: rgb(129, 129, 129);
+    background-color: rgb(45, 45, 45);
+    color: white;
     position: relative;
     top: 4px;
-    left: 2px;
+    box-shadow: 0px 0px 0px rgb(0, 0, 0);
+}
+#clear-all-button:active{
+    background-color: rgb(45, 45, 45);
+    color: white;
+    position: relative;
+    top: 4px;
     box-shadow: 0px 0px 0px rgb(0, 0, 0);
 }
 
