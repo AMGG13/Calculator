@@ -20,18 +20,17 @@ body{
 }
 .calc-body{
     z-index: 100;
-    position:absolute;
-    top:30%;
-    left: 30%;
     width: 400px;
     height: 510px;
     margin: 0 auto;
     text-align: center;
     border-color: black;
     border-style: solid;
-    border-radius: 15px;
-    border-width: 5px;
-    background-color: var(--background-calc)
+    border-radius: 20px;
+    border-width: 4px;
+    margin-top: 25px;
+    background-color: var(--background-calc);
+    box-shadow: 2px 8px rgb(255, 255, 255),rgb(0, 0, 0) 6px 12px;
 }
 .buttons-body{
     padding-top: 30px;
@@ -46,7 +45,7 @@ button{
     border-style: solid;
     border-radius: 15px;
     border-width: 2px;
-    box-shadow: 0px 4px 0px rgb(0, 0, 0);
+    box-shadow: 0px 3px rgb(222, 222, 222),rgb(0, 0, 0) 0px 6px;
     transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
 }
 button:hover{
@@ -69,7 +68,7 @@ button:active{
     border-style: solid;
     border-radius: 15px;
     border-width: 2px;
-    box-shadow: 0px 4px 0px rgb(100, 140, 185);
+    box-shadow: 0px 4px 0px rgb(100, 140, 185),rgb(0, 0, 0) 0px 6px;
     transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
     background-color: rgb(137, 192, 255);
 }
@@ -87,7 +86,7 @@ button:active{
     border-style: solid;
     border-radius: 15px;
     border-width: 2px;
-    box-shadow: 0px 4px 0px rgb(190, 183, 87);
+    box-shadow: 0px 4px 0px rgb(190, 183, 87),rgb(0, 0, 0) 0px 6px;
     transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
     background-color: rgb(246, 237, 112);
 }
@@ -105,7 +104,7 @@ button:active{
     border-style: solid;
     border-radius: 15px;
     border-width: 2px;
-    box-shadow: 0px 4px 0px rgb(120, 80, 169);
+    box-shadow: 0px 4px 0px rgb(120, 80, 169),rgb(0, 0, 0) 0px 6px;
     transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
     background-color: rgb(180, 123, 249);
 }
@@ -123,7 +122,7 @@ button:active{
     border-style: solid;
     border-radius: 15px;
     border-width: 2px;
-    box-shadow: 0px 4px 0px rgb(183, 80, 80);
+    box-shadow: 0px 4px 0px rgb(183, 80, 80),rgb(0, 0, 0) 0px 6px;
     transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
     background-color: rgb(255, 110, 110);
 }
@@ -142,7 +141,7 @@ button:active{
     border-style: solid;
     border-radius: 15px;
     border-width: 2px;
-    box-shadow: 0px 4px 0px rgb(83, 157, 78);
+    box-shadow: 0px 4px 0px rgb(83, 157, 78),rgb(0, 0, 0) 0px 6px;
     transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
     background-color: rgb(155, 242, 148);
 }
@@ -177,14 +176,15 @@ button:active{
     height: 100px;
 }
 input{
+    margin-top: 5px;
+    font-family: 'Courier New', Courier, monospace;
     width: 90%;
     height: 43px;
-    font-size: 26px;
+    font-size: 32px;
     color: black;
-    font-weight: bold;
     text-align: end;
     border-style: none;
 }
 #last-op{
-    font-size: 16px;
+    font-size: 18px;
 }

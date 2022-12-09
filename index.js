@@ -8,28 +8,25 @@ const CLEAR_BUTTON = document.getElementById("clear-button");
 const PLUS_BUTTON = document.getElementById("plus-button");
 const MINUS_BUTTON = document.getElementById("minus-button");
 const PRODUCT_BUTTON = document.getElementById("product-button");
+const SLASH_BUTTON = document.getElementById("slash-button");
 //Inputs
-let history_op = document.getElementById("last-op");
-let result = document.getElementById("result");
+const history_op = document.getElementById("last-op");
+const result = document.getElementById("result");
 //Importants
-let numbers = [];
-let last_op = "";
+//let numbers = [];
+//let last_op = "";
+
 //Constants
 const PLUS_SYMBOL = "+";
 const MINUS_SYMBOL = "-";
 const PRODUCT_SYMBOL = "x";
 const SLASH_SYMBOL = "/";
-//EqualEvent
-let equalEvent = new MouseEvent("click", { shiftKey: true });
+const SYNTAX_ERROR = "Syntax Error";
 
 /*###########################################################
 						FUNCTIONS HERE
 ###########################################################*/
-function purgeNumberArray() {
-	numbers = numbers.filter(function (num) {
-		return !Number.isNaN(num);
-	});
-}
+/*#####################__UTILS__##################### */
 function getClearNumber(str) {
 	if (str.includes(PLUS_SYMBOL)) {
 		str = str.replaceAll(PLUS_SYMBOL, "");
@@ -41,9 +38,9 @@ function getClearNumber(str) {
 		str = str.replaceAll(SLASH_SYMBOL, "");
 	} else {
 	}
-
 	return str;
 }
+function name() {}
 function containsOp(str) {
 	let isOp;
 	isOp =
@@ -62,97 +59,293 @@ function endWithOp(str) {
 		str.endsWith(SLASH_SYMBOL);
 	return isOp;
 }
-function isNumber(str) {
-	return /^-?[0-9]\d*(\.\d+)?$/.test(str);
+function containsPoint(str) {
+	let havePoint = false;
+	havePoint = str.endsWith(".");
+	return havePoint;
 }
+function countPoints(result_input) {
+	let points = [];
+	let splitted_input = result_input.split("");
+	points = splitted_input.filter((c) => containsPoint(c));
+
+	return points.length;
+}
+function pointBetween(result_input, button_value) {
+	let is_between = false;
+	let symbols = [];
+	let splitted_input = result_input.split("");
+	symbols = splitted_input.filter((c) => isNaN(c));
+	if (symbols.length > 0) {
+		is_between = symbols.pop() == button_value;
+	} else {
+		is_between = false;
+	}
+	return is_between;
+}
+function cannot_write_a_point(button_value, result_input) {
+	let not_able = false;
+	let result_input_is_empty = result_input == "" && button_value == ".";
+	let ends_with_point = result_input.endsWith(".") && button_value == ".";
+	let contans_two_points =
+		countPoints(result_input) == 2 && button_value == ".";
+	let is_between = pointBetween(result_input, button_value);
+	not_able =
+		result_input_is_empty ||
+		ends_with_point ||
+		contans_two_points ||
+		is_between;
+	return not_able;
+}
+function getLastOp(operation) {
+	let last_op = [];
+	let splitted_op = operation.split("");
+	last_op = splitted_op.filter((c) => containsOp(c));
+
+	return last_op.pop();
+}
+function slash(operation) {
+	let written_numbers_string = operation.split(SLASH_SYMBOL);
+	let written_numbers_parsed_to_number = written_numbers_string.map(
+		(string_number) => parseFloat(string_number)
+	);
+	let slash_result = written_numbers_parsed_to_number.reduce((a, b) => a / b);
+	if (slash_result == "Infinity") {
+		slash_result = SYNTAX_ERROR;
+	}
+	return slash_result;
+}
+function product(operation) {
+	let written_numbers_string = operation.split(PRODUCT_SYMBOL);
+	let written_numbers_parsed_to_number = written_numbers_string.map(
+		(string_number) => parseFloat(string_number)
+	);
+	let product_result = written_numbers_parsed_to_number.reduce((a, b) => a * b);
+	return product_result;
+}
+function sum(operation) {
+	let written_numbers_string = operation.split(PLUS_SYMBOL);
+	let written_numbers_parsed_to_number = written_numbers_string.map(
+		(string_number) => parseFloat(string_number)
+	);
+	let sum_result = written_numbers_parsed_to_number.reduce((a, b) => a + b);
+	return sum_result;
+}
+function minus(operation) {
+	//Arreglar map
+	let minus_result = 0;
+	let written_numbers_string = [];
+	if (operation.startsWith(MINUS_SYMBOL)) {
+		written_numbers_string = operation.split(MINUS_SYMBOL);
+		written_numbers_string.shift();
+		let written_numbers_parsed_to_number = written_numbers_string.map(
+			(string_number) => parseFloat(string_number)
+		);
+		minus_result = written_numbers_parsed_to_number.reduce(
+			(a, b) => a * -1 - b
+		);
+	} else {
+		let written_numbers_string = operation.split(MINUS_SYMBOL);
+		let written_numbers_parsed_to_number = written_numbers_string.map(
+			(string_number) => parseFloat(string_number)
+		);
+		minus_result = written_numbers_parsed_to_number.reduce((a, b) => a - b);
+	}
+	return minus_result;
+}
+/*#####################__EVENTS__#####################*/
+
+/**
+ * Get te inner html of the button and then write the value in the result_input
+ * if result contains already a cero. this cero will be replaced by other value
+ * @param {Object} Button
+ */
 function write(button) {
 	let number = button.innerHTML;
-	if (result.value == "0") {
-		result.value = number;
+	let result_input = result.value;
+	if (cannot_write_a_point(number, result_input)) {
+		return result.value;
 	} else {
-		result.value += number;
+		result_input === "0" ? (result.value = number) : (result.value += number);
 	}
 }
+
+/**
+ * Empty history and result input
+ */
 function clear_all() {
 	result.value = "";
-	last_op = "";
-	numbers = [];
 	history_op.value = "";
 }
+
+/**
+ * Delete the last character of the result input
+ */
 function clear() {
-	let all_text = result.value;
-	result.value = all_text.slice(0, -1);
+	let result_length = result.value.length;
+	let result_input = result.value.slice(0, result_length - 1);
+	result.value = result_input;
 }
-function sum() {
-	let op = numbers[0] + numbers[1];
-	return op;
-}
-function do_sum() {
-	history_op.value = result.value;
-	let result_sum = sum();
-	numbers = [result_sum];
-	result.value = String(result_sum);
-	last_op = PLUS_SYMBOL;
-	console.log(numbers);
+function do_plus_event() {
+	//PLUS EVENT LOGIC
+	let double_op = false;
+	let result_input = result.value;
+	let result_input_is_a_number = !isNaN(result_input);
+
+	if (result_input_is_a_number) {
+		result_input == "" ? result.value : (result.value += PLUS_SYMBOL);
+	} else if (result_input == "Syntax Error") {
+		result.value = "";
+	} else {
+		if (endWithOp(result_input) && result_input.length > 1) {
+			clear();
+			result.value += PLUS_SYMBOL;
+		} else if (result_input.length == 1) {
+			return;
+		} else if (containsOp(result_input)) {
+			double_op = true;
+			equal_event(PLUS_SYMBOL, double_op);
+		} else {
+			double_op = false;
+			equal_event(PLUS_SYMBOL, double_op);
+		}
+	}
 }
 
-function minus() {
-	let op = 0;
-	op = numbers[0] - numbers[1];
-	return op;
+function do_minus_event() {
+	//PLUS EVENT LOGIC
+	let double_op = false;
+	let result_input = result.value;
+	let result_input_is_a_number = !isNaN(result_input);
+
+	if (result_input_is_a_number) {
+		result.value += MINUS_SYMBOL;
+	} else if (result_input == SYNTAX_ERROR) {
+		result.value = MINUS_SYMBOL;
+	} else {
+		if (endWithOp(result_input)) {
+			clear();
+			result.value += MINUS_SYMBOL;
+		} else if (containsOp(result_input)) {
+			double_op = true;
+			equal_event(MINUS_SYMBOL, double_op);
+		} else {
+			double_op = false;
+			equal_event(MINUS_SYMBOL, double_op);
+		}
+	}
 }
-function do_minus() {
-	history_op.value = result.value;
-	let result_minus = minus();
-	numbers = [result_minus];
-	result.value = String(result_minus);
-	last_op = MINUS_SYMBOL;
+function do_product_event() {
+	//PRODUCT EVENT LOGIC
+	let double_op = false;
+	let result_input = result.value;
+	let result_input_is_a_number = !isNaN(result_input);
+
+	if (result_input_is_a_number) {
+		result_input == "" ? result.value : (result.value += PRODUCT_SYMBOL);
+	} else if (result_input == SYNTAX_ERROR) {
+		result.value = "";
+	} else {
+		if (endWithOp(result_input) && result_input.length > 1) {
+			clear();
+			result.value += PRODUCT_SYMBOL;
+		} else if (result_input.length == 1) {
+			return;
+		} else if (containsOp(result_input)) {
+			double_op = true;
+			equal_event(PRODUCT_SYMBOL, double_op);
+		} else {
+			double_op = false;
+			equal_event(PRODUCT_SYMBOL, double_op);
+		}
+	}
 }
-function equalMakeOp() {
-	//TODO los valores del array se duplican
+function do_slash_event() {
+	let double_op = false;
+	let result_input = result.value;
+	let result_input_is_a_number = !isNaN(result_input);
+
+	if (result_input_is_a_number) {
+		result_input == "" ? result.value : (result.value += SLASH_SYMBOL);
+	} else if (result_input == SYNTAX_ERROR) {
+		result.value = "";
+	} else {
+		if (endWithOp(result_input) && result_input.length > 1) {
+			clear();
+			result.value += SLASH_SYMBOL;
+		} else if (result_input.length == 1) {
+			return;
+		} else if (containsOp(result_input)) {
+			double_op = true;
+			equal_event(SLASH_SYMBOL, double_op);
+		} else {
+			double_op = false;
+			equal_event(SLASH_SYMBOL, double_op);
+		}
+	}
+}
+
+function equal_event(last_operator, double_op) {
+	//LOGIC
 	let operation = result.value;
-	if (!containsOp(operation) && isNaN(operation)) {
-		return;
-	}
-	if (numbers.length == 1) {
-		let last_number = "";
-		if (operation == numbers[0]) {
-			last_number = operation;
-		} else {
-			last_number = operation.replace(numbers[0], "");
-		}
-
-		if (containsOp(last_number)) {
-			last_number = getClearNumber(last_number);
-			numbers.push(parseInt(last_number));
-		} else {
-			numbers.push(parseInt(last_number));
-		}
-	}
-	if (!endWithOp(result.value) && isNaN(operation)) {
-		switch (last_op) {
+	let result_number = -1;
+	if (endWithOp(operation)) {
+		clear();
+		result_number = result.value;
+	} else if (operation.startsWith(MINUS_SYMBOL) && !(isNaN(operation))) {
+		result.value = operation;
+		result_number = operation;
+	} else if (operation == SYNTAX_ERROR) {
+		return SYNTAX_ERROR;
+	} else {
+		switch (last_operator) {
 			case PLUS_SYMBOL:
-				do_sum();
+				if (getLastOp(operation) === PLUS_SYMBOL) {
+					result_number = sum(operation);
+				} else {
+					result_number = equal_event(getLastOp(operation), false);
+				}
 				break;
 			case MINUS_SYMBOL:
-				do_minus();
+				if (getLastOp(operation) === MINUS_SYMBOL) {
+					result_number = minus(operation);
+				} else {
+					result_number = equal_event(getLastOp(operation), false);
+				}
+				break;
+			case SLASH_SYMBOL:
+				if (getLastOp(operation) === SLASH_SYMBOL) {
+					result_number = slash(operation);
+				} else {
+					result_number = equal_event(getLastOp(operation), false);
+				}
 				break;
 			case PRODUCT_SYMBOL:
+				if (getLastOp(operation) === PRODUCT_SYMBOL) {
+					result_number = product(operation);
+				} else {
+					result_number = equal_event(getLastOp(operation), false);
+				}
 				break;
 			default:
+				return SYNTAX_ERROR;
 				break;
 		}
-	} else {
-		purgeNumberArray();
-		console.log(numbers);
-		result.value = getClearNumber(operation);
 	}
+	history_op.value = operation;
+	double_op
+		? (result.value = result_number + last_operator)
+		: (result.value = result_number);
+	return result_number;
 }
 /*###########################################################
 							MAIN
 ###########################################################*/
-function ready() {
-	//Write numbers
+/* 
+1.- TODO RESTA
+*/
+function main() {
+	//Go over the buttons class and add a eventlistener to write it in the result-input the value of that button
 	Array.from(document.getElementsByClassName("number")).forEach(function (
 		element
 	) {
@@ -160,67 +353,19 @@ function ready() {
 			write(element);
 		});
 	});
-
-	//Clear all inputs
 	CLEAR_ALL_BUTTON.addEventListener("click", clear_all);
-
-	//Clear last char of the result input
 	CLEAR_BUTTON.addEventListener("click", clear);
-	//Plus
-	PLUS_BUTTON.addEventListener("click", function () {
-		let last_number = result.value;
-		if (endWithOp(last_number)) {
-			clear();
-			result.value += PLUS_SYMBOL;
-			return;
-		}
-		if (last_number === "" || last_number.endsWith(PLUS_SYMBOL)) {
-			return;
-		}
-		if (last_op === "") {
-			numbers.push(parseInt(last_number));
-			result.value += PLUS_SYMBOL;
-			last_op = PLUS_SYMBOL;
-		} else {
-			result.value += PLUS_SYMBOL;
-			equalMakeOp();
-		}
-	});
 
-	//Minus
-	MINUS_BUTTON.addEventListener("click", function () {
-		let last_number = result.value;
-		if (endWithOp(last_number)) {
-			clear();
-			result.value += MINUS_SYMBOL;
-			last_op = MINUS_SYMBOL;
-			return;
-		}
-		if (last_number === MINUS_SYMBOL) {
-			return;
-		}
-		if (last_number.endsWith(MINUS_SYMBOL)) {
-			return;
-		} //-50
+	PLUS_BUTTON.addEventListener("click", do_plus_event);
+	MINUS_BUTTON.addEventListener("click", do_minus_event);
+	PRODUCT_BUTTON.addEventListener("click", do_product_event);
+	SLASH_BUTTON.addEventListener("click", do_slash_event);
 
-		if (last_op === "") {
-			numbers.push(parseInt(last_number));
-			result.value += MINUS_SYMBOL;
-			last_op = MINUS_SYMBOL;
-		} else {
-			equalMakeOp();
-			result.value += MINUS_SYMBOL;
-			last_op = MINUS_SYMBOL;
-		}
-	});
-
-	EQUAL_BUTTON.addEventListener("click", function (e) {
-		if (e.shiftKey || !e.shiftKey) {
-			equalMakeOp();
-		} else {
-			//TODO
-		}
+	EQUAL_BUTTON.addEventListener("click", function () {
+		let operation = result.value;
+		let last_op = getLastOp(operation);
+		equal_event(last_op, false);
 	});
 }
 
-document.addEventListener("DOMContentLoaded", ready);
+document.addEventListener("DOMContentLoaded", main);
