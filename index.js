@@ -9,13 +9,11 @@ const PLUS_BUTTON = document.getElementById("plus-button");
 const MINUS_BUTTON = document.getElementById("minus-button");
 const PRODUCT_BUTTON = document.getElementById("product-button");
 const SLASH_BUTTON = document.getElementById("slash-button");
+const ON_BUTTON = document.getElementById("on-button");
+const OFF_BUTTON = document.getElementById("off-button");
 //Inputs
 const history_op = document.getElementById("last-op");
 const result = document.getElementById("result");
-//Importants
-//let numbers = [];
-//let last_op = "";
-
 //Constants
 const PLUS_SYMBOL = "+";
 const MINUS_SYMBOL = "-";
@@ -26,52 +24,64 @@ const SYNTAX_ERROR = "Syntax Error";
 /*###########################################################
 						FUNCTIONS HERE
 ###########################################################*/
+
 /*#####################__UTILS__##################### */
-function getClearNumber(str) {
-	if (str.includes(PLUS_SYMBOL)) {
-		str = str.replaceAll(PLUS_SYMBOL, "");
-	} else if (str.includes(MINUS_SYMBOL)) {
-		str = str.replaceAll(MINUS_SYMBOL, "");
-	} else if (str.includes(PRODUCT_SYMBOL)) {
-		str = str.replaceAll(PRODUCT_SYMBOL, "");
-	} else if (str.includes(SLASH_SYMBOL)) {
-		str = str.replaceAll(SLASH_SYMBOL, "");
-	} else {
-	}
-	return str;
-}
-function name() {}
-function containsOp(str) {
+
+/**
+ * @param {string} result_input
+ * @returns  true if the result input contains any of the symbols or false if not.
+ */
+function contains_op(result_input) {
 	let isOp;
 	isOp =
-		str.includes(PLUS_SYMBOL) ||
-		str.includes(MINUS_SYMBOL) ||
-		str.includes(PRODUCT_SYMBOL) ||
-		str.includes(SLASH_SYMBOL);
+		result_input.includes(PLUS_SYMBOL) ||
+		result_input.includes(MINUS_SYMBOL) ||
+		result_input.includes(PRODUCT_SYMBOL) ||
+		result_input.includes(SLASH_SYMBOL);
 	return isOp;
 }
-function endWithOp(str) {
+/**
+ * @param {string} result_input 
+ * @returns true if the result input ends with any of the symbols or false if not.
+ */
+function end_with_op(result_input) {
 	let isOp;
 	isOp =
-		str.endsWith(PLUS_SYMBOL) ||
-		str.endsWith(MINUS_SYMBOL) ||
-		str.endsWith(PRODUCT_SYMBOL) ||
-		str.endsWith(SLASH_SYMBOL);
+		result_input.endsWith(PLUS_SYMBOL) ||
+		result_input.endsWith(MINUS_SYMBOL) ||
+		result_input.endsWith(PRODUCT_SYMBOL) ||
+		result_input.endsWith(SLASH_SYMBOL);
 	return isOp;
 }
-function containsPoint(str) {
+
+/** 
+ * @param {string} result_input 
+ * @returns true if result input contains a "."
+ */
+function contains_point(result_input) {
 	let havePoint = false;
-	havePoint = str.endsWith(".");
+	havePoint = result_input.endsWith(".");
 	return havePoint;
 }
-function countPoints(result_input) {
+
+/**
+ * @param {string} result_input 
+ * @returns a Number of "." that contains result input.
+ */
+function count_points(result_input) {
 	let points = [];
 	let splitted_input = result_input.split("");
-	points = splitted_input.filter((c) => containsPoint(c));
+	points = splitted_input.filter((c) => contains_point(c));
 
 	return points.length;
 }
-function pointBetween(result_input, button_value) {
+
+/**
+ * @param {string} result_input 
+ * @param {string} button_value 
+ * @returns true if there are 1 "." already in a number of the operation, false if not.
+ */
+function point_between(result_input, button_value) {
 	let is_between = false;
 	let symbols = [];
 	let splitted_input = result_input.split("");
@@ -83,13 +93,19 @@ function pointBetween(result_input, button_value) {
 	}
 	return is_between;
 }
+
+/**
+ * @param {string} button_value 
+ * @param {string} result_input 
+ * @returns true if any of the functions of points are true and false if all of this functions are false
+ */
 function cannot_write_a_point(button_value, result_input) {
 	let not_able = false;
 	let result_input_is_empty = result_input == "" && button_value == ".";
 	let ends_with_point = result_input.endsWith(".") && button_value == ".";
 	let contans_two_points =
-		countPoints(result_input) == 2 && button_value == ".";
-	let is_between = pointBetween(result_input, button_value);
+		count_points(result_input) == 2 && button_value == ".";
+	let is_between = point_between(result_input, button_value);
 	not_able =
 		result_input_is_empty ||
 		ends_with_point ||
@@ -97,13 +113,26 @@ function cannot_write_a_point(button_value, result_input) {
 		is_between;
 	return not_able;
 }
-function getLastOp(operation) {
+
+/**
+ * @param {string} result_input 
+ * @returns the lastest symbol that has been used
+ */
+function get_last_op(result_input) {
 	let last_op = [];
-	let splitted_op = operation.split("");
-	last_op = splitted_op.filter((c) => containsOp(c));
+	let splitted_op = result_input.split("");
+	last_op = splitted_op.filter((c) => contains_op(c));
 
 	return last_op.pop();
 }
+
+
+/*#####################__CALCULATOR_FUNCTIONS__##################### */
+
+/**
+ * @param {string} operation 
+ * @returns the result of the division (NUMBER) or a Syntax error if divide by zero (STRING)
+ */
 function slash(operation) {
 	let written_numbers_string = operation.split(SLASH_SYMBOL);
 	let written_numbers_parsed_to_number = written_numbers_string.map(
@@ -115,6 +144,11 @@ function slash(operation) {
 	}
 	return slash_result;
 }
+
+/**
+ * @param {string} operation 
+ * @returns  the result product of the operation
+ */
 function product(operation) {
 	let written_numbers_string = operation.split(PRODUCT_SYMBOL);
 	let written_numbers_parsed_to_number = written_numbers_string.map(
@@ -123,6 +157,11 @@ function product(operation) {
 	let product_result = written_numbers_parsed_to_number.reduce((a, b) => a * b);
 	return product_result;
 }
+
+/**
+ * @param {string} operation 
+ * @returns the result sum of the operation
+ */
 function sum(operation) {
 	let written_numbers_string = operation.split(PLUS_SYMBOL);
 	let written_numbers_parsed_to_number = written_numbers_string.map(
@@ -131,6 +170,11 @@ function sum(operation) {
 	let sum_result = written_numbers_parsed_to_number.reduce((a, b) => a + b);
 	return sum_result;
 }
+
+/**
+ * @param {string} operation 
+ * @returns the result minus of the operation
+ */
 function minus(operation) {
 	//Arreglar map
 	let minus_result = 0;
@@ -197,12 +241,12 @@ function do_plus_event() {
 	} else if (result_input == "Syntax Error") {
 		result.value = "";
 	} else {
-		if (endWithOp(result_input) && result_input.length > 1) {
+		if (end_with_op(result_input) && result_input.length > 1) {
 			clear();
 			result.value += PLUS_SYMBOL;
 		} else if (result_input.length == 1) {
 			return;
-		} else if (containsOp(result_input)) {
+		} else if (contains_op(result_input)) {
 			double_op = true;
 			equal_event(PLUS_SYMBOL, double_op);
 		} else {
@@ -223,10 +267,10 @@ function do_minus_event() {
 	} else if (result_input == SYNTAX_ERROR) {
 		result.value = MINUS_SYMBOL;
 	} else {
-		if (endWithOp(result_input)) {
+		if (end_with_op(result_input)) {
 			clear();
 			result.value += MINUS_SYMBOL;
-		} else if (containsOp(result_input)) {
+		} else if (contains_op(result_input)) {
 			double_op = true;
 			equal_event(MINUS_SYMBOL, double_op);
 		} else {
@@ -246,12 +290,12 @@ function do_product_event() {
 	} else if (result_input == SYNTAX_ERROR) {
 		result.value = "";
 	} else {
-		if (endWithOp(result_input) && result_input.length > 1) {
+		if (end_with_op(result_input) && result_input.length > 1) {
 			clear();
 			result.value += PRODUCT_SYMBOL;
 		} else if (result_input.length == 1) {
 			return;
-		} else if (containsOp(result_input)) {
+		} else if (contains_op(result_input)) {
 			double_op = true;
 			equal_event(PRODUCT_SYMBOL, double_op);
 		} else {
@@ -270,12 +314,12 @@ function do_slash_event() {
 	} else if (result_input == SYNTAX_ERROR) {
 		result.value = "";
 	} else {
-		if (endWithOp(result_input) && result_input.length > 1) {
+		if (end_with_op(result_input) && result_input.length > 1) {
 			clear();
 			result.value += SLASH_SYMBOL;
 		} else if (result_input.length == 1) {
 			return;
-		} else if (containsOp(result_input)) {
+		} else if (contains_op(result_input)) {
 			double_op = true;
 			equal_event(SLASH_SYMBOL, double_op);
 		} else {
@@ -289,10 +333,10 @@ function equal_event(last_operator, double_op) {
 	//LOGIC
 	let operation = result.value;
 	let result_number = -1;
-	if (endWithOp(operation)) {
+	if (end_with_op(operation)) {
 		clear();
 		result_number = result.value;
-	} else if (operation.startsWith(MINUS_SYMBOL) && !(isNaN(operation))) {
+	} else if (operation.startsWith(MINUS_SYMBOL) && !isNaN(operation)) {
 		result.value = operation;
 		result_number = operation;
 	} else if (operation == SYNTAX_ERROR) {
@@ -300,31 +344,31 @@ function equal_event(last_operator, double_op) {
 	} else {
 		switch (last_operator) {
 			case PLUS_SYMBOL:
-				if (getLastOp(operation) === PLUS_SYMBOL) {
+				if (get_last_op(operation) === PLUS_SYMBOL) {
 					result_number = sum(operation);
 				} else {
-					result_number = equal_event(getLastOp(operation), false);
+					result_number = equal_event(get_last_op(operation), false);
 				}
 				break;
 			case MINUS_SYMBOL:
-				if (getLastOp(operation) === MINUS_SYMBOL) {
+				if (get_last_op(operation) === MINUS_SYMBOL) {
 					result_number = minus(operation);
 				} else {
-					result_number = equal_event(getLastOp(operation), false);
+					result_number = equal_event(get_last_op(operation), false);
 				}
 				break;
 			case SLASH_SYMBOL:
-				if (getLastOp(operation) === SLASH_SYMBOL) {
+				if (get_last_op(operation) === SLASH_SYMBOL) {
 					result_number = slash(operation);
 				} else {
-					result_number = equal_event(getLastOp(operation), false);
+					result_number = equal_event(get_last_op(operation), false);
 				}
 				break;
 			case PRODUCT_SYMBOL:
-				if (getLastOp(operation) === PRODUCT_SYMBOL) {
+				if (get_last_op(operation) === PRODUCT_SYMBOL) {
 					result_number = product(operation);
 				} else {
-					result_number = equal_event(getLastOp(operation), false);
+					result_number = equal_event(get_last_op(operation), false);
 				}
 				break;
 			default:
@@ -355,7 +399,6 @@ function main() {
 	});
 	CLEAR_ALL_BUTTON.addEventListener("click", clear_all);
 	CLEAR_BUTTON.addEventListener("click", clear);
-
 	PLUS_BUTTON.addEventListener("click", do_plus_event);
 	MINUS_BUTTON.addEventListener("click", do_minus_event);
 	PRODUCT_BUTTON.addEventListener("click", do_product_event);
@@ -363,7 +406,7 @@ function main() {
 
 	EQUAL_BUTTON.addEventListener("click", function () {
 		let operation = result.value;
-		let last_op = getLastOp(operation);
+		let last_op = get_last_op(operation);
 		equal_event(last_op, false);
 	});
 }

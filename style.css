@@ -150,6 +150,44 @@ button:active{
     top: 4px;
     box-shadow: 0px 0px 0px rgb(0, 0, 0);
 }
+#on-button{
+    width: 70px;
+    height: 50px;
+    margin: 5px;
+    margin-bottom: 10px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 15px;
+    border-width: 2px;
+    box-shadow: 0px 4px 0px rgb(83, 157, 78),rgb(0, 0, 0) 0px 6px;
+    transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
+    background-color: rgb(155, 242, 148);
+}
+#on-button:active{
+    position: relative;
+    top: 4px;
+    box-shadow: 0px 0px 0px rgb(0, 0, 0);
+}
+#off-button{
+    width: 70px;
+    height: 50px;
+    margin: 5px;
+    margin-bottom: 10px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 15px;
+    border-width: 2px;
+    box-shadow: 0px 4px 0px rgb(183, 80, 80),rgb(0, 0, 0) 0px 6px;
+    transition:  background-color 0.08s,border-width 0.1,box-shadow 0s,position 0.3s,top 0.3s,left 0.3s;
+    background-color: rgb(255, 110, 110);
+}
+#off-button:active{
+    background-color: rgb(255, 110, 110);
+    position: relative;
+    top: 4px;
+    box-shadow: 0px 0px 0px rgb(0, 0, 0);
+}
+
 #clear-button:active{
     background-color: rgb(45, 45, 45);
     color: white;
