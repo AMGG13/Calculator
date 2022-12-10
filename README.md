@@ -17,4 +17,4 @@ Most of the information that I have been using and reading has been from [MDN](h
 >### Other functions
 >* [isNaN()](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/isNaN)
 >* [parseFloat](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/parseFloat)
-Thanks for reading.
+#Thanks for reading.
