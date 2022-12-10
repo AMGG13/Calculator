@@ -14,7 +14,7 @@ Most of the information that I have been using and reading has been from [MDN](h
 >* [String.includes()](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/String/includes)
 >* [String.endsWith()](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
 >[String.startsWith()](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
->## Other functions
+>### Other functions
 >* [isNaN()](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/isNaN)
->[parseFloat](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/parseFloat)
+>* [parseFloat](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/parseFloat)
 Thanks for reading.
